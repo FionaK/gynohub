@@ -44,11 +44,7 @@ const Register = () => {
 
       <div class="w-full px-6 py-8 md:px-8 lg:w-1/2">
         <div class="flex justify-center mx-auto">
-          <img
-            class="w-auto h-7 sm:h-8"
-            src="https://merakiui.com/images/logo.svg"
-            alt=""
-          />
+          <p className="text-[26px] font-extrabold text-white ">GynoHub</p>
         </div>
 
         <p class="mt-3 text-xl text-center text-gray-600 dark:text-gray-200">
@@ -111,7 +107,6 @@ const Register = () => {
               type="email"
               id="email"
               onChange={(e) => setEmail(e.target.value)}
-
             />
           </div>
 
@@ -154,7 +149,7 @@ const Register = () => {
         </form>
       </div>
     </div>
-  ); 
+  );
 };
 
 export default Register;
