@@ -14,8 +14,8 @@ const Services = () => {
           <span class="inline-block w-1 h-1 ml-1 bg-blue-500 rounded-full"></span>
         </div> */}
         <h1 class="text-2xl font-semibold text-gray-800 capitalize lg:text-3xl dark:text-white mt-12">
-          Get <span class="text-blue-500 py-1">Personalised</span>{" "}
-          help <br /> with{" "}
+          Get <span class="text-blue-500 py-1">Personalised</span> help <br />{" "}
+          with{" "}
         </h1>
 
         <p class="mt-4 text-gray-500 xl:mt-6 dark:text-gray-300">
@@ -43,13 +43,13 @@ const Services = () => {
             </span>
 
             <h1 class="text-xl font-semibold text-gray-700 capitalize dark:text-white">
-              iIrregular or Missed Periods
+              Irregular or Missed Periods
             </h1>
 
             <p class="text-gray-500 dark:text-gray-300">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Provident
-              ab nulla quod dignissimos vel non corrupti doloribus voluptatum
-              eveniet
+              Irregular or missed periods are common menstrual issues. They can
+              result from factors like stress or hormonal changes. Consult a
+              healthcare provider for evaluation and guidance.
             </p>
           </div>
 
@@ -76,38 +76,11 @@ const Services = () => {
             </h1>
 
             <p class="text-gray-500 dark:text-gray-300">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Provident
-              ab nulla quod dignissimos vel non corrupti doloribus voluptatum
-              eveniet
-            </p>
-          </div>
-
-          <div class="space-y-3">
-            <span class="inline-block p-3 text-blue-500 bg-blue-100 rounded-full dark:text-white dark:bg-blue-500">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="w-6 h-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-                />
-              </svg>
-            </span>
-
-            <h1 class="text-xl font-semibold text-gray-700 capitalize dark:text-white">
-              Pre-menstrual Syndrome(PMS)
-            </h1>
-
-            <p class="text-gray-500 dark:text-gray-300">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Provident
-              ab nulla quod dignissimos vel non corrupti doloribus voluptatum
-              eveniet
+              If you're noticing symptoms like painful urination, abnormal
+              discharge, or bumps, consider a virtual consultation with us. Even
+              if you don't have symptoms after exposure, a provider can
+              prescribe antibiotics through a virtual visit, depending on recent
+              intimacy
             </p>
           </div>
 
@@ -140,9 +113,38 @@ const Services = () => {
             </h1>
 
             <p class="text-gray-500 dark:text-gray-300">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Provident
-              ab nulla quod dignissimos vel non corrupti doloribus voluptatum
-              eveniet
+              Vaginal yeast infections, caused by Candida overgrowth, are common
+              and uncomfortable. Symptoms include itching, swelling, irritation,
+              and thick discharge. Seek online gynecology consultation for
+              treatment options.
+            </p>
+          </div>
+
+          <div class="space-y-3">
+            <span class="inline-block p-3 text-blue-500 bg-blue-100 rounded-full dark:text-white dark:bg-blue-500">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="w-6 h-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                />
+              </svg>
+            </span>
+
+            <h1 class="text-xl font-semibold text-gray-700 capitalize dark:text-white">
+              Pre-menstrual Syndrome(PMS)
+            </h1>
+
+            <p class="text-gray-500 dark:text-gray-300">
+              Learn about symptoms, coping strategies, and effective management
+              techniques for a more comfortable menstrual experience.
             </p>
           </div>
 
@@ -169,9 +171,8 @@ const Services = () => {
             </h1>
 
             <p class="text-gray-500 dark:text-gray-300">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Provident
-              ab nulla quod dignissimos vel non corrupti doloribus voluptatum
-              eveniet
+              Virtual gynecologists can help you choose the right birth control
+              and prescribe medication if needed.
             </p>
           </div>
 
@@ -198,9 +199,8 @@ const Services = () => {
             </h1>
 
             <p class="text-gray-500 dark:text-gray-300">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Provident
-              ab nulla quod dignissimos vel non corrupti doloribus voluptatum
-              eveniet
+              Explore general sexual health information: Learn about maintaining
+              sexual wellness, common concerns, and preventive measures.
             </p>
           </div>
         </div>
