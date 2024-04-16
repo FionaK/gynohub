@@ -1,7 +1,10 @@
 import React from "react";
 import women from "../assets/women2.svg"
+import { Link } from "react-router-dom";
+import { UserAuth } from "../context/AuthContext";
 
 const Hero = () => {
+  const { user } = UserAuth();
   return (
     <section className="dark:bg-gray-800 dark:text-gray-800">
       <div class="container px-6 py-16 mx-auto">
@@ -20,7 +23,12 @@ const Hero = () => {
               </p>
 
               <button class="w-full px-5 py-2 mt-2 text-sm tracking-wider text-white uppercase transition-colors duration-300 transform bg-blue-600 rounded-lg lg:w-auto hover:bg-blue-500 focus:outline-none focus:bg-blue-500">
-                Book Now
+              <Link
+								// class="btn btn-outline text-xs text-gray-500 uppercase dark:text-gray-400 hover:underline"
+								to={"/login"}
+							>
+								Book Now
+							</Link>
               </button>
             </div>
           </div>
