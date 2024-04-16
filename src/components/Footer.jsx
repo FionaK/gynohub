@@ -24,7 +24,7 @@ const Footer = () => {
             </div>
           </div>
 
-          <div>
+          {/* <div>
             <p class="font-semibold text-gray-800 dark:text-white">
               Quick Link
             </p>
@@ -49,7 +49,7 @@ const Footer = () => {
                 Our Philosophy
               </a>
             </div>
-          </div>
+          </div> */}
 
           <div>
             <p class="font-semibold text-gray-800 dark:text-white">
@@ -69,12 +69,12 @@ const Footer = () => {
               >
                 Who We Are
               </a>
-              <a
+              {/* <a
                 href="#"
                 class="text-gray-600 transition-colors duration-300 dark:text-white dark:hover:text-blue-400 hover:underline hover:text-blue-500"
               >
                 Our Philosophy
-              </a>
+              </a> */}
             </div>
           </div>
         </div>
