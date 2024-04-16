@@ -27,11 +27,10 @@ const Benefits = () => {
               24/7 Personal Care
             </h1>
 
-            {/* <p class="text-gray-500 dark:text-gray-300">
+            <p class="text-gray-500 dark:text-gray-300">
               Access personalized sexual health care whenever you need it, day
-              or night. Our dedicated team is here to support you around the
-              clock.
-            </p> */}
+              or night. 
+            </p>
           </div>
 
           <div class="flex flex-col items-center p-6 space-y-3 text-center bg-gray-100 rounded-xl dark:bg-gray-800">
@@ -43,11 +42,10 @@ const Benefits = () => {
               Affordable & Convinient
             </h1>
 
-            {/* <p class="text-gray-500 dark:text-gray-300">
+            <p class="text-gray-500 dark:text-gray-300">
               Enjoy high-quality sexual health care that's both affordable and
-              convenient. Say goodbye to costly appointments and hello to
-              accessible care that fits your budget and schedule.
-            </p> */}
+              convenient. 
+            </p>
           </div>
 
           <div class="flex flex-col items-center p-6 space-y-3 text-center bg-gray-100 rounded-xl dark:bg-gray-800">
@@ -59,11 +57,10 @@ const Benefits = () => {
               Virtual Visits
             </h1>
 
-            {/* <p class="text-gray-500 dark:text-gray-300">
+            <p class="text-gray-500 dark:text-gray-300">
               Experience the ease and comfort of virtual consultations from the
-              privacy of your own home. Our online platform makes accessing
-              sexual health care simple and discreet.
-            </p> */}
+              privacy of your own home. 
+            </p>
           </div>
           
         </div>
