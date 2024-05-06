@@ -1,6 +1,36 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { doc, getDoc } from "firebase/firestore";
+import { UserAuth } from "../context/AuthContext";
+import { db } from "../lib/firebase";
 
 const Table = () => {
+  const { user } = UserAuth();
+
+  const [bookings, setBookings] = useState([]);
+
+  useEffect(() => {
+    const getBookingDetails = async () => {
+      const docRef = doc(db, "bookings", user?.email); // Reference the specific document
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists) {
+        setBookings(docSnap.data().bookings); // Set bookings array if document exists
+      } else {
+        // Handle document not found scenario (optional)
+        console.log("No such document!");
+      }
+    };
+
+    getBookingDetails();
+
+    // Clean up function (optional)
+    return () => {
+      // Unsubscribe from any listeners or cleanup logic here (if needed)
+    };
+  }, [user?.email]);
+
+
+
   return (
     <div className="overflow-x-auto">
       <table className="table table-zebra">
@@ -14,159 +44,35 @@ const Table = () => {
             </th>
             <th>Gynecologist</th>
             <th>Service</th>
-            <th>Time</th>
-            <th></th>
+            <th>Date</th>
+            <th>Status</th>
           </tr>
         </thead>
         <tbody>
-          {/* row 1 */}
-          <tr>
-            <th>
-              <label>
-                <input type="checkbox" className="checkbox" />
-              </label>
-            </th>
-            <td>
-              <div className="flex items-center gap-3">
-                <div className="avatar">
-                  {/* <div className="mask mask-squircle w-12 h-12">
-                    <img
-                      src="/tailwind-css-component-profile-2@56w.png"
-                      alt="Avatar Tailwind CSS Component"
-                    />
-                  </div> */}
+          {bookings.map((booking, index) => (
+            <tr key={index}>
+              <td>
+                <label>
+                  <input type="checkbox" className="checkbox" />
+                </label>
+              </td>
+              <td>
+                <div className="flex items-center gap-3">
+                  <div className="avatar"></div>
+                  <div>
+                    <div className="font-bold">{booking?.gynaName}</div>
+                    <div className="text-sm opacity-50">{booking?.gynaEmail}</div>
+                  </div>
                 </div>
-                <div>
-                  <div className="font-bold">Hart Hagerty</div>
-                  <div className="text-sm opacity-50">Nairobi</div>
-                </div>
-              </div>
-            </td>
-            <td>
-              Random Check
-              <br />
-              {/* <span className="badge badge-ghost badge-sm">
-                Desktop Support Technician
-              </span> */}
-            </td>
-            <td>12am</td>
-            <th>
-              <button className="btn btn-ghost btn-xs">details</button>
-            </th>
-          </tr>
-          {/* row 2 */}
-          <tr>
-            <th>
-              <label>
-                <input type="checkbox" className="checkbox" />
-              </label>
-            </th>
-            <td>
-              <div className="flex items-center gap-3">
-                <div className="avatar">
-                  {/* <div className="mask mask-squircle w-12 h-12">
-                    <img
-                      src="/tailwind-css-component-profile-3@56w.png"
-                      alt="Avatar Tailwind CSS Component"
-                    />
-                  </div> */}
-                </div>
-                <div>
-                  <div className="font-bold">Brice Swyre</div>
-                  <div className="text-sm opacity-50">Kisumu</div>
-                </div>
-              </div>
-            </td>
-            <td>
-              Random Check<br />
-              {/* <span className="badge badge-ghost badge-sm">Tax Accountant</span> */}
-            </td>
-            <td>4pm</td>
-            <th>
-              <button className="btn btn-ghost btn-xs">details</button>
-            </th>
-          </tr>
-          {/* row 3 */}
-          <tr>
-            <th>
-              <label>
-                <input type="checkbox" className="checkbox" />
-              </label>
-            </th>
-            <td>
-              <div className="flex items-center gap-3">
-                <div className="avatar">
-                  {/* <div className="mask mask-squircle w-12 h-12">
-                    <img
-                      src="/tailwind-css-component-profile-4@56w.png"
-                      alt="Avatar Tailwind CSS Component"
-                    />
-                  </div> */}
-                </div>
-                <div>
-                  <div className="font-bold">Mary Ferencz</div>
-                  <div className="text-sm opacity-50">Eldoret</div>
-                </div>
-              </div>
-            </td>
-            <td>
-              Random Check
-              <br />
-              {/* <span className="badge badge-ghost badge-sm">
-                Office Assistant I
-              </span> */}
-            </td>
-            <td>7am</td>
-            <th>
-              <button className="btn btn-ghost btn-xs">details</button>
-            </th>
-          </tr>
-          {/* row 4 */}
-          <tr>
-            <th>
-              <label>
-                <input type="checkbox" className="checkbox" />
-              </label>
-            </th>
-            <td>
-              <div className="flex items-center gap-3">
-                <div className="avatar">
-                  {/* <div className="mask mask-squircle w-12 h-12">
-                    <img
-                      src="/tailwind-css-component-profile-5@56w.png"
-                      alt="Avatar Tailwind CSS Component"
-                    />
-                  </div> */}
-                </div>
-                <div>
-                  <div className="font-bold">Grace Tears</div>
-                  <div className="text-sm opacity-50">Nakuru</div>
-                </div>
-              </div>
-            </td>
-            <td>
-             Random Check
-              <br />
-              {/* <span className="badge badge-ghost badge-sm">
-                Community Outreach Specialist
-              </span> */}
-            </td>
-            <td>10 am</td>
-            <th>
-              <button className="btn btn-ghost btn-xs">details</button>
-            </th>
-          </tr>
+              </td>
+              <td>{booking?.service}</td>
+              <td>{booking?.date}</td>
+              <td>
+                <button className="btn btn-ghost btn-xs">details</button>
+              </td>
+            </tr>
+          ))}
         </tbody>
-        {/* foot */}
-        {/* <tfoot>
-          <tr>
-            <th></th>
-            <th>Name</th>
-            <th>Job</th>
-            <th>Favorite Color</th>
-            <th></th>
-          </tr>
-        </tfoot> */}
       </table>
     </div>
   );

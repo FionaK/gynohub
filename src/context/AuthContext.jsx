@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { auth, db } from "../firebase";
+import { auth, db } from "../lib/firebase";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -20,7 +20,7 @@ const AuthContext = createContext();
 const Toast = Swal.mixin({
   toast: true,
   position: "top-right",
-  iconColor: "red",
+  iconColor: "red", 
   customClass: {
       popup: "colored-toast",
   },
@@ -42,9 +42,13 @@ export function AuthContextProvider({ children }) {
             // The signed-in user info.
             const user = result.user;
             setDoc(doc(db, 'users', user.email), {
-                savedShows: [],
-                watchedShows: []
+                bookings: [],
             })
+
+            setDoc(doc(db, "userchats", user.email), {
+              chats: [],
+            });
+
             // ...
         }).catch((error) => {
             Toast.fire({
@@ -66,8 +70,12 @@ export function AuthContextProvider({ children }) {
       throw new Error("Document Exist!");
     } else {
       await setDoc(docRef, {
-        savedShows: [],
-        watchedShows: [],
+        bookings: [],
+
+      });
+
+      await setDoc(doc(db, "userchats", email), {
+        chats: [],
       });
     }
   };

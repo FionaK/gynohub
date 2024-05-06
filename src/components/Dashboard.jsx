@@ -2,6 +2,7 @@ import React from "react";
 import Table from "./Table";
 import { UserAuth } from "../context/AuthContext";
 import Cards from "./Cards";
+import AddGyno from "./AddGyno";
 
 const Dashboard = () => {
 	const { user } = UserAuth();
@@ -15,15 +16,6 @@ const Dashboard = () => {
 							<p class="mt-3 text-xl text-center text-gray-600 dark:text-gray-200">
 								{user?.displayName || user?.email}
 							</p>
-
-							<button
-								onClick={() =>
-									document.getElementById("my_modal_1").showModal()
-								}
-								class="btn text-xs text-gray-500 uppercase dark:text-gray-400 hover:underline"
-							>
-								Book
-							</button>
 						</div>
 
 						<div role="tablist" className="tabs tabs-lifted">
@@ -56,6 +48,26 @@ const Dashboard = () => {
 							>
 								<Cards />
 							</div>
+
+							{user?.email == "brian.lyonne@gmail.com" ||
+							"katefiona121@gmail.com" ? (
+								<>
+									{" "}
+									<input
+										type="radio"
+										name="my_tabs_2"
+										role="tab"
+										className="tab"
+										aria-label="Add Gynacologists"
+									/>
+									<div
+										role="tabpanel"
+										className="tab-content bg-base-100 border-base-300 rounded-box p-6"
+									>
+										<AddGyno />
+									</div>{" "}
+								</>
+							) : null}
 						</div>
 					</div>
 
@@ -125,7 +137,6 @@ const Dashboard = () => {
 													/>
 												</div>
 
-
 												<div>
 													<label
 														class="text-gray-700 dark:text-gray-200"
@@ -133,17 +144,17 @@ const Dashboard = () => {
 													>
 														Gynaecologist
 													</label>
-												<select className="select select-bordered w-full max-w-xs">
-													<option disabled selected>
-														Choose your Specialist
-													</option>
-													<option>Dr.Gupta</option>
-													<option>Dr. Njathika</option>
-													<option>Dr. Shree</option>
-													<option>Dr. Prawagal</option>
-													<option>Dr. Susan</option>
-												</select>
-                        </div>
+													<select className="select select-bordered w-full max-w-xs">
+														<option disabled selected>
+															Choose your Specialist
+														</option>
+														<option>Dr.Gupta</option>
+														<option>Dr. Njathika</option>
+														<option>Dr. Shree</option>
+														<option>Dr. Prawagal</option>
+														<option>Dr. Susan</option>
+													</select>
+												</div>
 											</div>
 
 											<div class="flex justify-end mt-6">
