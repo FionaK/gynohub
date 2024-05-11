@@ -5,7 +5,7 @@ import { db } from "../lib/firebase";
 
 const Table = () => {
   const { user } = UserAuth();
-
+ 
   const [bookings, setBookings] = useState([]);
 
   useEffect(() => {

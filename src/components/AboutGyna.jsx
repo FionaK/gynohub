@@ -10,7 +10,7 @@ import {
 import { db } from "../lib/firebase"; // Assuming db is imported from your Firebase config
 import { useEffect, useState } from "react";
 // import { usePaystackPayment } from "react-paystack";
-import { PaystackButton } from 'react-paystack';
+import { PaystackButton } from "react-paystack";
 import { UserAuth } from "../context/AuthContext";
 import { v4 as uuidv4 } from "uuid";
 import { toast, Bounce } from "react-toastify";
@@ -20,6 +20,29 @@ const AboutGyna = () => {
 	const [loading, setLoading] = useState(false);
 	const [gynaData, setGynaData] = useState(null);
 	const { user } = UserAuth();
+
+	const [userDetails, setUserDetails] = useState(null);
+
+	useEffect(() => {
+		if (!user || !user.email) return;
+		const docRef = doc(db, "users", user?.email);
+
+		// Subscribe to document changes
+		const unsubscribe = onSnapshot(docRef, (docSnapshot) => {
+			if (docSnapshot.exists()) {
+				// Update state with the new data
+				setUserDetails(docSnapshot.data());
+			} else {
+				// Handle document not found scenario (optional)
+				console.log("No such document!");
+			}
+		});
+
+		// Clean up function to unsubscribe from the snapshot listener
+		return () => {
+			unsubscribe();
+		};
+	}, [user?.email]);
 
 	const config = {
 		reference: new Date().getTime().toString(),
@@ -60,6 +83,27 @@ const AboutGyna = () => {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
+		if (!userDetails || !userDetails.phone) {
+			// Display error toast
+			toast.error("Update your profile at My Profile to book a session", {
+				position: "top-center",
+				autoClose: 6000,
+				hideProgressBar: false,
+				closeOnClick: true,
+				pauseOnHover: true,
+				draggable: true,
+				progress: undefined,
+				theme: "colored",
+				transition: Bounce,
+			});
+			return; // Exit the function
+		}
+
+
+
+
+
+
 		const formData = new FormData(e.target);
 		const { date, service } = Object.fromEntries(formData);
 
@@ -80,7 +124,7 @@ const AboutGyna = () => {
 						gynaCity: gynaData?.city,
 						bookingFor: user?.email,
 						bookingStatus: "pending",
-						paid: false
+						paid: false,
 					}),
 				});
 				setLoading(false);
@@ -94,7 +138,7 @@ const AboutGyna = () => {
 					progress: undefined,
 					theme: "colored",
 					transition: Bounce,
-					});
+				});
 				e.target.reset();
 			} else {
 				// If document doesn't exist, create it
@@ -110,7 +154,7 @@ const AboutGyna = () => {
 							gynaCity: gynaData?.city,
 							bookingFor: user?.email,
 							bookingStatus: "pending",
-							paid:false
+							paid: false,
 						},
 					],
 				});
@@ -125,7 +169,7 @@ const AboutGyna = () => {
 					progress: undefined,
 					theme: "colored",
 					transition: Bounce,
-					});
+				});
 				e.target.reset();
 			}
 		} catch (err) {
@@ -198,7 +242,7 @@ const AboutGyna = () => {
 						</p>
 						<button
 							onClick={() => document.getElementById("my_modal_3").showModal()}
-							className="btn w-full mt-5 px-10 py-3 text-lg font-medium rounded-3xl dark:bg-violet-600 dark:text-gray-50"
+							className="btn w-full mt-5 px-10 py-3 text-lg font-medium rounded-3xl dark:bg-blue-500 hover:bg-blue-300 dark:text-gray-50"
 						>
 							Schedule
 						</button>
@@ -242,7 +286,7 @@ const AboutGyna = () => {
 						/>
 
 						<button
-							className="btn my-3 w-full bg-blue-500 text-black"
+							className="btn my-3 w-full bg-blue-500 hover:bg-blue-300 text-black"
 							type="submit"
 						>
 							{loading ? "Loading" : "Submit"}

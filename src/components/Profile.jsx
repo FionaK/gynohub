@@ -1,11 +1,38 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { UserAuth } from "../context/AuthContext";
+import { db } from "../lib/firebase";
+import { doc, updateDoc, onSnapshot } from "firebase/firestore";
+import upload from "../lib/upload";
+import { toast, Bounce } from "react-toastify";
 
 const Profile = () => {
 	const { user } = UserAuth();
-	const photoUrl = user?.reloadUserInfo?.photoUrl;
-	const name = user?.displayName;
-	console.log(name);
+	const [loading, setLoading] = useState();
+	const [userDetails, setUserDetails] = useState(null);
+
+	useEffect(() => {
+		if (!user || !user.email) return;
+		const docRef = doc(db, "users", user?.email);
+
+		// Subscribe to document changes
+		const unsubscribe = onSnapshot(docRef, (docSnapshot) => {
+			if (docSnapshot.exists()) {
+				// Update state with the new data
+				setUserDetails(docSnapshot.data());
+			} else {
+				// Handle document not found scenario (optional)
+				console.log("No such document!");
+			}
+		});
+
+		// Clean up function to unsubscribe from the snapshot listener
+		return () => {
+			unsubscribe();
+		};
+	}, [user?.email]);
+
+	const name = userDetails?.name || user?.displayName;
+	const photoUrl = userDetails?.photoUrl || user?.reloadUserInfo?.photoUrl;
 
 	const [avatar, setAvatar] = useState({
 		file: null,
@@ -41,7 +68,66 @@ const Profile = () => {
 		? separateNames(name)
 		: { firstName: "", lastName: "" };
 
-        
+	const handleSubmit = async (e) => {
+		e.preventDefault();
+
+		const formData = new FormData(e.target);
+		const { firstname, lastname, address, city, phone, county } =
+			Object.fromEntries(formData);
+
+		try {
+			setLoading(true);
+			const updateObj = {};
+
+			if (firstname) updateObj.name = firstname + " " + lastname;
+			if (address) updateObj.residence = address;
+			if (city) updateObj.city = city;
+			if (county) updateObj.county = county;
+			if (phone) updateObj.phone = phone;
+
+			// If there's a file selected, upload it and update the photoUrl
+			if (avatar.file) {
+				const imgUrl = await upload(avatar.file);
+				updateObj.photoUrl = imgUrl;
+			}
+
+			// Update only if there's at least one field to update
+			if (Object.keys(updateObj).length > 0) {
+				const docRef = doc(db, "users", user?.email);
+				await updateDoc(docRef, updateObj);
+			}
+
+
+
+			toast.success("Profile Updated Successfully", {
+				position: "top-center",
+				autoClose: 6000,
+				hideProgressBar: false,
+				closeOnClick: true,
+				pauseOnHover: true,
+				draggable: true,
+				progress: undefined,
+				theme: "colored",
+				transition: Bounce,
+			});
+			e.target.reset();
+			setLoading(false);
+		} catch (err) {
+			setLoading(false);
+			toast.error("Profile Updating Failed", {
+				position: "top-center",
+				autoClose: 6000,
+				hideProgressBar: false,
+				closeOnClick: true,
+				pauseOnHover: true,
+				draggable: true,
+				progress: undefined,
+				theme: "colored",
+				transition: Bounce,
+			});
+			console.log(err);
+		}
+	};
 
 	return (
 		<section className="p-6 dark:bg-gray-800 dark:text-gray-50">
@@ -54,7 +140,7 @@ const Profile = () => {
 					</p>
 					<img
 						className="w-24 h-24 dark:bg-gray-800 rounded-full cursor-pointer ml-16"
-						src={photoUrl || "./avatar.png"}
+						src={userDetails?.photoUrl || "./avatar.png"}
 						alt=""
 					/>
 				</div>
@@ -75,32 +161,32 @@ const Profile = () => {
 					<div className="col-span-full sm:col-span-3">
 						<p className="text-sm text-left">Email</p>
 						<p className="block w-full text-left py-2 mt-2 text-gray-700 bg-white text-2xl font-extrabold dark:bg-gray-800 dark:text-gray-300 ">
-							{user?.email}
+							{userDetails?.email}
 						</p>
 					</div>
 					<div className="col-span-full sm:col-span-3">
 						<p className="text-sm text-left">Address</p>
 						<p className="block w-full text-left py-2 mt-2 text-gray-700 bg-white text-2xl font-extrabold dark:bg-gray-800 dark:text-gray-300 ">
-							{user?.residence}
+							{userDetails?.residence}
 						</p>
 					</div>
 					<div className="col-span-full sm:col-span-2">
 						<p className="text-sm text-left">City</p>
 						<p className="block w-full text-left py-2 mt-2 text-gray-700 bg-white text-2xl font-extrabold dark:bg-gray-800 dark:text-gray-300 ">
-							{user?.city}
+							{userDetails?.city}
 						</p>
 					</div>
 					<div className="col-span-full sm:col-span-2">
 						{" "}
 						<p className="text-sm text-left">County</p>
 						<p className="block w-full text-left py-2 mt-2 text-gray-700 bg-white text-2xl font-extrabold dark:bg-gray-800 dark:text-gray-300 ">
-							{user?.county}
+							{userDetails?.county}
 						</p>
 					</div>
 					<div className="col-span-full sm:col-span-2">
 						<p className="text-sm text-left">Phone</p>
 						<p className="block w-full text-left py-2 mt-2 text-gray-700 bg-white text-2xl font-extrabold dark:bg-gray-800 dark:text-gray-300 ">
-							{user?.phone}
+							{userDetails?.phone}
 						</p>
 					</div>
 				</div>
@@ -115,16 +201,19 @@ const Profile = () => {
 
 			<dialog id="my_modal_3" className="modal">
 				<div className="modal-box w-11/12 max-w-5xl dark:bg-gray-800">
-					<form
-						method="dialog"
-						noValidate=""
-						className="container flex flex-col mx-auto space-y-12"
-					>
+					<form method="dialog">
 						{/* if there is a button in form, it will close the modal */}
 						<button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
 							✕
 						</button>
+					</form>
 
+					<form
+						method="dialog"
+						noValidate=""
+						className="container flex flex-col mx-auto space-y-12 "
+						onSubmit={handleSubmit}
+					>
 						<fieldset className="grid grid-cols-4 gap-6 p-6 rounded-md shadow-sm dark:bg-gray-800">
 							<div className="space-y-2 col-span-full lg:col-span-1">
 								<p className="font-medium">Personal Information Update</p>
@@ -196,7 +285,10 @@ const Profile = () => {
 										id="email"
 										type="email"
 										name="email"
-										placeholder={user?.email ? user?.email : "Email"}
+										disabled
+										placeholder={
+											userDetails?.email ? userDetails?.email : "Email"
+										}
 										className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring"
 									/>
 								</div>
@@ -208,8 +300,10 @@ const Profile = () => {
 									<input
 										id="zip"
 										type="text"
-										placeholder=""
-										name={user?.phone ? user?.phone : "Phone"}
+										placeholder={
+											userDetails?.phone ? userDetails?.phone : "Phone"
+										}
+										name="phone"
 										className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring"
 									/>
 								</div>
@@ -222,7 +316,9 @@ const Profile = () => {
 										id="address"
 										type="text"
 										placeholder={
-											user?.residence ? user?.residence : "Residence"
+											userDetails?.residence
+												? userDetails?.residence
+												: "Residence"
 										}
 										name="address"
 										className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring"
@@ -235,7 +331,7 @@ const Profile = () => {
 									<input
 										id="city"
 										type="text"
-										placeholder={user?.city ? user?.city : "City"}
+										placeholder={userDetails?.city ? userDetails?.city : "City"}
 										name="city"
 										className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring"
 									/>
@@ -247,7 +343,9 @@ const Profile = () => {
 									<input
 										id="state"
 										type="text"
-										placeholder={user?.county ? user?.county : "County"}
+										placeholder={
+											userDetails?.county ? userDetails?.county : "County"
+										}
 										name="county"
 										className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring"
 									/>
@@ -256,9 +354,9 @@ const Profile = () => {
 						</fieldset>
 						<button
 							className="btn bg-blue-500 hover:bg-blue-300 text-black"
-							type="button"
+							type="submit"
 						>
-							Update Profile
+							{loading ? "Loading" : "Submit"}
 						</button>
 					</form>
 				</div>
