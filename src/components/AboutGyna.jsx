@@ -1,61 +1,73 @@
 import { useParams } from "react-router-dom";
-import { doc, getDoc, setDoc, onSnapshot, arrayUnion, updateDoc } from "firebase/firestore"; // Import for fetching a single document
+import {
+	doc,
+	getDoc,
+	setDoc,
+	onSnapshot,
+	arrayUnion,
+	updateDoc,
+} from "firebase/firestore"; // Import for fetching a single document
 import { db } from "../lib/firebase"; // Assuming db is imported from your Firebase config
 import { useEffect, useState } from "react";
-import { usePaystackPayment } from "react-paystack";
+// import { usePaystackPayment } from "react-paystack";
+import { PaystackButton } from 'react-paystack';
 import { UserAuth } from "../context/AuthContext";
 import { v4 as uuidv4 } from "uuid";
+import { toast, Bounce } from "react-toastify";
 
 const AboutGyna = () => {
 	const { id } = useParams();
+	const [loading, setLoading] = useState(false);
 	const [gynaData, setGynaData] = useState(null);
 	const { user } = UserAuth();
 
 	const config = {
 		reference: new Date().getTime().toString(),
 		email: "user@example.com",
-		amount: 20000,
+		amount: 150000,
 		publicKey: "pk_test_06f0f6d5f5222c1fd5316744a827130dfd91b7da",
 		currency: "KES",
 	};
 
-	// you can call this function anything
-	const onSuccess = (reference) => {
-		// Implementation for whatever you want to do with reference and after success call.
-		console.log(reference);
-	};
+	// // you can call this function anything
+	// const onSuccess = (reference) => {
+	// 	// Implementation for whatever you want to do with reference and after success call.
+	// 	console.log(reference);
+	// };
 
-	// you can call this function anything
-	const onClose = () => {
-		// implementation for  whatever you want to do when the Paystack dialog closed.
-		console.log("closed");
-	};
+	// // you can call this function anything
+	// const onClose = () => {
+	// 	// implementation for  whatever you want to do when the Paystack dialog closed.
+	// 	console.log("closed");
+	// };
 
-	const PaystackHookExample = () => {
-		const initializePayment = usePaystackPayment(config);
-		return (
-			<div>
-				<button
-					onClick={() => {
-						initializePayment(onSuccess, onClose);
-					}}
-					className="btn mx-3 my-3"
-				>
-					Pay With Paystack
-				</button>
-			</div>
-		);
-	};
+	// const PaystackHookExample = () => {
+	// 	const initializePayment = usePaystackPayment(config);
+
+	// 	return (
+	// 		<div>
+	// 			<button
+	// 				onClick={() => {
+	// 					initializePayment(onSuccess, onClose);
+	// 				}}
+	// 				className="btn mx-3 my-3 bg-red-400 text-black hover:bg-red-200"
+	// 			>
+	// 				Pay With Paystack
+	// 			</button>
+	// 		</div>
+	// 	);
+	// };
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		const formData = new FormData(e.target);
 		const { date, service } = Object.fromEntries(formData);
-	
+
 		try {
+			setLoading(true);
 			const docRef = doc(db, "bookings", user?.email);
 			const docSnap = await getDoc(docRef);
-	
+
 			if (docSnap.exists()) {
 				// If document exists, update it
 				await updateDoc(docRef, {
@@ -64,32 +76,62 @@ const AboutGyna = () => {
 						date,
 						service,
 						gynaEmail: gynaData?.email,
-						gynaName: gynaData?.firstname + " " + gynaData?.lastname, 
+						gynaName: gynaData?.firstname + " " + gynaData?.lastname,
 						gynaCity: gynaData?.city,
 						bookingFor: user?.email,
-						bookingStatus: "pending"
-					})
+						bookingStatus: "pending",
+						paid: false
+					}),
 				});
+				setLoading(false);
+				toast.success("Appoitment Sheduled, Pending Payment(My Appoitments)", {
+					position: "top-center",
+					autoClose: 6000,
+					hideProgressBar: false,
+					closeOnClick: true,
+					pauseOnHover: true,
+					draggable: true,
+					progress: undefined,
+					theme: "colored",
+					transition: Bounce,
+					});
+				e.target.reset();
 			} else {
 				// If document doesn't exist, create it
+				setLoading(true);
 				await setDoc(docRef, {
-					bookings: [{
-						uuid: uuidv4(),
-						date,
-						service,
-						gynaEmail: gynaData?.email,
-						gynaName: gynaData?.firstname + " " + gynaData?.lastname, 
-						gynaCity: gynaData?.city,
-						bookingFor: user?.email,
-						bookingStatus: "pending"
-					}]
+					bookings: [
+						{
+							uuid: uuidv4(),
+							date,
+							service,
+							gynaEmail: gynaData?.email,
+							gynaName: gynaData?.firstname + " " + gynaData?.lastname,
+							gynaCity: gynaData?.city,
+							bookingFor: user?.email,
+							bookingStatus: "pending",
+							paid:false
+						},
+					],
 				});
+				setLoading(false);
+				toast.success("Appoitment Sheduled, Pending Payment(My Appoitments)", {
+					position: "top-center",
+					autoClose: 6000,
+					hideProgressBar: false,
+					closeOnClick: true,
+					pauseOnHover: true,
+					draggable: true,
+					progress: undefined,
+					theme: "colored",
+					transition: Bounce,
+					});
+				e.target.reset();
 			}
 		} catch (err) {
 			console.error("Error updating document: ", err);
 		}
 	};
-	  
 
 	useEffect(() => {
 		const getGynaDetails = async () => {
@@ -110,7 +152,26 @@ const AboutGyna = () => {
 		return () => {
 			// Unsubscribe from any listeners or cleanup logic here (if needed)
 		};
-	}, [id]); // Dependency array ensures effect runs only on id change
+	}, [id]);
+
+	// you can call this function anything
+	const handlePaystackSuccessAction = (reference) => {
+		// Implementation for whatever you want to do with reference and after success call.
+		console.log(reference);
+	};
+
+	// you can call this function anything
+	const handlePaystackCloseAction = () => {
+		// implementation for  whatever you want to do when the Paystack dialog closed.
+		console.log("closed");
+	};
+
+	const componentProps = {
+		...config,
+		text: "Pay",
+		onSuccess: (reference) => handlePaystackSuccessAction(reference),
+		onClose: handlePaystackCloseAction,
+	};
 
 	return (
 		<section class="bg-white dark:bg-gray-800/40">
@@ -166,6 +227,7 @@ const AboutGyna = () => {
 							id="date"
 							type="text"
 							name="date"
+							required
 							placeholder="date"
 							className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring"
 						/>
@@ -174,6 +236,7 @@ const AboutGyna = () => {
 							id="date"
 							type="text"
 							name="service"
+							required
 							placeholder="Briefly state your service"
 							className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring"
 						/>
@@ -182,11 +245,12 @@ const AboutGyna = () => {
 							className="btn my-3 w-full bg-blue-500 text-black"
 							type="submit"
 						>
-							{/* {loading ? "Loading" : "Submit"} */}Submit
+							{loading ? "Loading" : "Submit"}
 						</button>
 					</form>
 
-					{/* <PaystackHookExample /> */}
+					{/* <PaystackHookExample  /> */}
+					<PaystackButton {...componentProps} />
 				</div>
 			</dialog>
 		</section>

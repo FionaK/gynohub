@@ -3,6 +3,7 @@ import Table from "./Table";
 import { UserAuth } from "../context/AuthContext";
 import Cards from "./Cards";
 import AddGyno from "./AddGyno";
+import Profile from "./Profile";
 
 const Dashboard = () => {
 	const { user } = UserAuth();
@@ -18,13 +19,13 @@ const Dashboard = () => {
 							</p>
 						</div>
 
-						<div role="tablist" className="tabs tabs-lifted">
+						<div role="tablist" className="tabs tabs-lifted dark:bg-gray-800">
 							<input
 								type="radio"
 								name="my_tabs_2"
 								role="tab"
-								className="tab"
-								aria-label="My Appointments"
+								className="tab mx-5 my-5"
+								aria-label="Appointments"
 								checked
 							/>
 							<div
@@ -39,7 +40,7 @@ const Dashboard = () => {
 								type="radio"
 								name="my_tabs_2"
 								role="tab"
-								className="tab"
+								className="tab mx-5 my-5"
 								aria-label="Gynacologists"
 							/>
 							<div
@@ -49,126 +50,40 @@ const Dashboard = () => {
 								<Cards />
 							</div>
 
-							{user?.email == "brian.lyonne@gmail.com" ||
-							"katefiona121@gmail.com" ? (
+							{user?.email === "brian.lyonne@gmail.com" ||
+							user?.email === "katefiona121@gmail.com" ? (
 								<>
-									{" "}
 									<input
 										type="radio"
 										name="my_tabs_2"
 										role="tab"
-										className="tab"
-										aria-label="Add Gynacologists"
+										className="tab mx-5 my-5"
+										aria-label="Add Gynaecologists"
 									/>
 									<div
 										role="tabpanel"
 										className="tab-content bg-base-100 border-base-300 rounded-box p-6"
 									>
 										<AddGyno />
-									</div>{" "}
+									</div>
 								</>
 							) : null}
-						</div>
-					</div>
 
-					{/* Open the modal using document.getElementById('ID').showModal() method */}
-
-					<dialog id="my_modal_1" className="modal">
-						<div className="modal-box bg-white rounded-md  dark:bg-gray-800 ">
-							<h3 className="font-bold text-lg">Make Your Booking</h3>
-							<div className="modal-action">
-								<form method="dialog">
-									<section class="max-w-4xl p-6 mx-auto bg-white rounded-md  dark:bg-gray-800">
-										<form>
-											<div class="grid grid-cols-1 gap-6 mt-4 sm:grid-cols-2">
-												<div>
-													<label
-														class="text-gray-700 dark:text-gray-200"
-														for="username"
-													>
-														Firstname
-													</label>
-													<input
-														id="username"
-														type="text"
-														class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring"
-													/>
-												</div>
-
-												<div>
-													<label
-														class="text-gray-700 dark:text-gray-200"
-														for="emailAddress"
-													>
-														Lastname
-													</label>
-													<input
-														id="emailAddress"
-														type="email"
-														class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring"
-													/>
-												</div>
-
-												<div>
-													<label
-														class="text-gray-700 dark:text-gray-200"
-														for="password"
-													>
-														Email
-													</label>
-													<input
-														id="password"
-														type="email"
-														class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring"
-													/>
-												</div>
-
-												<div>
-													<label
-														class="text-gray-700 dark:text-gray-200"
-														for="passwordConfirmation"
-													>
-														Description
-													</label>
-													<input
-														id="passwordConfirmation"
-														type="text"
-														class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40 dark:focus:border-blue-300 focus:outline-none focus:ring"
-													/>
-												</div>
-
-												<div>
-													<label
-														class="text-gray-700 dark:text-gray-200"
-														for="passwordConfirmation"
-													>
-														Gynaecologist
-													</label>
-													<select className="select select-bordered w-full max-w-xs">
-														<option disabled selected>
-															Choose your Specialist
-														</option>
-														<option>Dr.Gupta</option>
-														<option>Dr. Njathika</option>
-														<option>Dr. Shree</option>
-														<option>Dr. Prawagal</option>
-														<option>Dr. Susan</option>
-													</select>
-												</div>
-											</div>
-
-											<div class="flex justify-end mt-6">
-												<button class="px-8 py-2.5 leading-5 text-white transition-colors duration-300 transform bg-gray-700 rounded-md hover:bg-gray-600 focus:outline-none focus:bg-gray-600">
-													Book
-												</button>
-												<button className="btn ml-5">Cancel</button>
-											</div>
-										</form>
-									</section>
-								</form>
+							<input
+								type="radio"
+								name="my_tabs_2"
+								role="tab"
+								className="tab mx-5 my-5"
+								aria-label="My Profile"
+							/>
+							<div
+								role="tabpanel"
+								className="tab-content bg-base-100 border-base-300 rounded-box p-6"
+							>
+								<Profile />
 							</div>
 						</div>
-					</dialog>
+					</div>
 				</div>
 			</div>
 		</section>

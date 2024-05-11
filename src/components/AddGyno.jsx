@@ -29,7 +29,7 @@ const AddGyno = () => {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-		setLoading(true);
+
 		const formData = new FormData(e.target);
 		const {
 			firstname,
@@ -53,6 +53,7 @@ const AddGyno = () => {
 		}
 
 		try {
+			setLoading(true);
 			const imgUrl = await upload(avatar.file);
 
 			await setDoc(doc(db, "gynas", email), {
@@ -69,7 +70,10 @@ const AddGyno = () => {
 				image: imgUrl,
 			});
 
-			// toast.success("Gynaecologist added")
+			toast.success("Gynaecologist added")
+			e.target.reset();
+			setLoading(false);
+
 		} catch (err) {
 			console.log(err);
 		}
@@ -242,7 +246,7 @@ const AddGyno = () => {
 					</div>
 				</fieldset>
 				<button className="btn" type="submit">
-					{/* {loading ? "Loading" : "Submit"} */}Submit
+					{loading ? "Loading" : "Submit"}
 				</button>
 			</form>
 		</section>
