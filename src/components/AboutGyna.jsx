@@ -8,19 +8,18 @@ import {
 	updateDoc,
 } from "firebase/firestore"; // Import for fetching a single document
 import { db } from "../lib/firebase"; // Assuming db is imported from your Firebase config
-import { useEffect, useState } from "react";
-// import { usePaystackPayment } from "react-paystack";
-import { PaystackButton } from "react-paystack";
+import { useEffect, useRef, useState } from "react";
 import { UserAuth } from "../context/AuthContext";
 import { v4 as uuidv4 } from "uuid";
 import { toast, Bounce } from "react-toastify";
+import emailjs from "@emailjs/browser";
 
 const AboutGyna = () => {
 	const { id } = useParams();
 	const [loading, setLoading] = useState(false);
 	const [gynaData, setGynaData] = useState(null);
 	const { user } = UserAuth();
-
+	const form = useRef();
 	const [userDetails, setUserDetails] = useState(null);
 
 	useEffect(() => {
@@ -44,42 +43,11 @@ const AboutGyna = () => {
 		};
 	}, [user?.email]);
 
-	const config = {
-		reference: new Date().getTime().toString(),
-		email: "user@example.com",
-		amount: 150000,
-		publicKey: "pk_test_06f0f6d5f5222c1fd5316744a827130dfd91b7da",
-		currency: "KES",
-	};
 
-	// // you can call this function anything
-	// const onSuccess = (reference) => {
-	// 	// Implementation for whatever you want to do with reference and after success call.
-	// 	console.log(reference);
-	// };
 
-	// // you can call this function anything
-	// const onClose = () => {
-	// 	// implementation for  whatever you want to do when the Paystack dialog closed.
-	// 	console.log("closed");
-	// };
 
-	// const PaystackHookExample = () => {
-	// 	const initializePayment = usePaystackPayment(config);
-
-	// 	return (
-	// 		<div>
-	// 			<button
-	// 				onClick={() => {
-	// 					initializePayment(onSuccess, onClose);
-	// 				}}
-	// 				className="btn mx-3 my-3 bg-red-400 text-black hover:bg-red-200"
-	// 			>
-	// 				Pay With Paystack
-	// 			</button>
-	// 		</div>
-	// 	);
-	// };
+	const gynaEmail = gynaData?.email;
+	const gynaName = gynaData?.firstname + " " + gynaData?.lastname;
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
@@ -99,11 +67,6 @@ const AboutGyna = () => {
 			return; // Exit the function
 		}
 
-
-
-
-
-
 		const formData = new FormData(e.target);
 		const { date, service } = Object.fromEntries(formData);
 
@@ -122,11 +85,36 @@ const AboutGyna = () => {
 						gynaEmail: gynaData?.email,
 						gynaName: gynaData?.firstname + " " + gynaData?.lastname,
 						gynaCity: gynaData?.city,
+						gynaPic: gynaData?.image,
 						bookingFor: user?.email,
 						bookingStatus: "pending",
 						paid: false,
 					}),
 				});
+
+				const templateParams = {
+					toGynaEmail: gynaEmail,
+					to_name: gynaName,
+					from_name: "gynohub.com",
+					message: `Hello, new appoitment by ${userDetails?.name} scheduled for ${date}, service is ${service}`,
+					reply_to_name: userDetails?.name,
+					userEmail: userDetails?.email,
+					reply_message: `Your appointment by Dr. ${gynaName} has been booked. Pay for appoitment on My Appoitments Tab.`,
+				};
+
+				emailjs
+					.send("service_s3comep", "template_m4qhmtv", templateParams, {
+						publicKey: "HMFI3tsHD3GasUWpv",
+					})
+					.then(
+						(response) => {
+							console.log("SUCCESS!", response.status, response.text);
+						},
+						(error) => {
+							console.log("FAILED...", error);
+						}
+					);
+
 				setLoading(false);
 				toast.success("Appoitment Sheduled, Pending Payment(My Appoitments)", {
 					position: "top-center",
@@ -152,12 +140,39 @@ const AboutGyna = () => {
 							gynaEmail: gynaData?.email,
 							gynaName: gynaData?.firstname + " " + gynaData?.lastname,
 							gynaCity: gynaData?.city,
+							gynaPic: gynaData?.image,
 							bookingFor: user?.email,
 							bookingStatus: "pending",
 							paid: false,
 						},
 					],
 				});
+				const templateParams = {
+					toGynaEmail: gynaEmail,
+					to_name: gynaName,
+					from_name: "gynohub.com",
+					message: `Hello, new appoitment by ${userDetails?.name} scheduled for ${date}, service is ${service}`,
+					reply_to_name: userDetails?.name,
+					userEmail: userDetails?.email,
+					reply_message: `Your appointment by Dr. ${gynaName} has been booked. Pay for appoitment on My Appoitments Tab.`,
+				};
+
+				emailjs
+					.send("service_s3comep", "template_m4qhmtv", templateParams, {
+						publicKey: "HMFI3tsHD3GasUWpv",
+					})
+					.then(
+						(response) => {
+							console.log("SUCCESS!", response.status, response.text);
+						},
+						(error) => {
+							console.log("FAILED...", error);
+						}
+					);
+
+
+
+
 				setLoading(false);
 				toast.success("Appoitment Sheduled, Pending Payment(My Appoitments)", {
 					position: "top-center",
@@ -198,24 +213,7 @@ const AboutGyna = () => {
 		};
 	}, [id]);
 
-	// you can call this function anything
-	const handlePaystackSuccessAction = (reference) => {
-		// Implementation for whatever you want to do with reference and after success call.
-		console.log(reference);
-	};
 
-	// you can call this function anything
-	const handlePaystackCloseAction = () => {
-		// implementation for  whatever you want to do when the Paystack dialog closed.
-		console.log("closed");
-	};
-
-	const componentProps = {
-		...config,
-		text: "Pay",
-		onSuccess: (reference) => handlePaystackSuccessAction(reference),
-		onClose: handlePaystackCloseAction,
-	};
 
 	return (
 		<section class="bg-white dark:bg-gray-800/40">
@@ -266,7 +264,7 @@ const AboutGyna = () => {
 					<p className="py-4">
 						Enter the date you'd like to have an appointment
 					</p>
-					<form onSubmit={handleSubmit}>
+					<form ref={form} onSubmit={handleSubmit}>
 						<input
 							id="date"
 							type="text"
@@ -293,8 +291,7 @@ const AboutGyna = () => {
 						</button>
 					</form>
 
-					{/* <PaystackHookExample  /> */}
-					<PaystackButton {...componentProps} />
+
 				</div>
 			</dialog>
 		</section>
