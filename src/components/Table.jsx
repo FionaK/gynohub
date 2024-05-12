@@ -25,7 +25,7 @@ const Table = () => {
 	const config = {
 		reference: new Date().getTime().toString(),
 		email: user?.email,
-		amount: 2000,
+		amount: 150000,
 		publicKey: "pk_live_13c11349c966c61d45a57db7df526feee4919cb5",
 		currency: "KES",
 	};
