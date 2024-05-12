@@ -1,23 +1,32 @@
 import React, { useEffect, useState } from "react";
-import { doc, onSnapshot, updateDoc } from "firebase/firestore";
+import {
+	doc,
+	onSnapshot,
+	query,
+	where,
+	updateDoc,
+	collection,
+	getDoc,
+} from "firebase/firestore";
 import { UserAuth } from "../context/AuthContext";
 import { db } from "../lib/firebase";
 import { toast, Bounce } from "react-toastify";
 
 import { PaystackButton } from "react-paystack";
 
-
-
 const Table = () => {
 	const { user } = UserAuth();
 
 	const [bookings, setBookings] = useState([]);
 
+	// console.log(bookings);
+	// console.log(bookings.bookings);
+
 	const config = {
 		reference: new Date().getTime().toString(),
 		email: user?.email,
-		amount: 150000,
-		publicKey: "pk_test_06f0f6d5f5222c1fd5316744a827130dfd91b7da",
+		amount: 2000,
+		publicKey: "pk_live_13c11349c966c61d45a57db7df526feee4919cb5",
 		currency: "KES",
 	};
 
@@ -25,19 +34,23 @@ const Table = () => {
 		if (!user || !user.email) return;
 		const docRef = doc(db, "bookings", user?.email);
 
-		// Reference the specific document
-
 		// Subscribe to document changes
 		const unsubscribe = onSnapshot(docRef, (docSnapshot) => {
 			if (docSnapshot.exists()) {
 				// Update state with the new data
-				setBookings(docSnapshot.data().bookings);
+				const bookingsData = docSnapshot.data();
+				if (bookingsData && Array.isArray(bookingsData.bookings)) {
+					setBookings(bookingsData.bookings);
+				} else {
+					console.log("Invalid data format from Firestore");
+				}
 			} else {
 				// Handle document not found scenario (optional)
 				console.log("No such document!");
 			}
 		});
 
+		// Clean up function to unsubscribe from the snapshot listener
 		return () => {
 			unsubscribe();
 		};
@@ -68,7 +81,6 @@ const Table = () => {
 						theme: "colored",
 						transition: Bounce,
 					});
-					
 				} catch (error) {
 					toast.error("Payment Unsuccesfull", {
 						position: "top-center",
@@ -86,7 +98,6 @@ const Table = () => {
 				console.log("Booking not found");
 			}
 		}
-		// Find the index of the booking with the provided UUID
 	};
 
 	const handlePaystackCloseAction = () => {
@@ -136,12 +147,26 @@ const Table = () => {
 							</td>
 							<td>{booking?.service}</td>
 							<td>{booking?.date}</td>
-							<td>{booking?.bookingStatus}</td>
+							<td>
+								{booking?.bookingConfirmed ? "Confirmed" : "Not Confirmed"}
+							</td>
 
-							<td>{booking?.paid ? "Paid" : "Not paid"}</td>
 							<td>
 								{booking?.paid ? (
-									<button className="btn btn-primary btn-disabled btn-xs">Paid</button>
+									<>
+										<p className="text-success">Paid</p>
+									</>
+								) : (
+									<>
+										<p className="text-error">Not Paid</p>
+									</>
+								)}
+							</td>
+							<td>
+								{booking?.paid ? (
+									<button className="btn btn-primary btn-disabled btn-xs">
+										Paid
+									</button>
 								) : (
 									<button className="btn btn-primary btn-xs">
 										<PaystackButton

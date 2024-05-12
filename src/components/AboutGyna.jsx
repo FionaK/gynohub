@@ -22,6 +22,8 @@ const AboutGyna = () => {
 	const form = useRef();
 	const [userDetails, setUserDetails] = useState(null);
 
+	// console.log(userDetails)
+
 	useEffect(() => {
 		if (!user || !user.email) return;
 		const docRef = doc(db, "users", user?.email);
@@ -86,8 +88,11 @@ const AboutGyna = () => {
 						gynaName: gynaData?.firstname + " " + gynaData?.lastname,
 						gynaCity: gynaData?.city,
 						gynaPic: gynaData?.image,
-						bookingFor: user?.email,
-						bookingStatus: "pending",
+						bookingForName: userDetails?.name,
+						bookingForEmail: userDetails?.email,
+						bookingForPhone: userDetails?.phone,
+						bookingForPic: userDetails?.photoUrl,
+						bookingConfirmed: false,
 						paid: false,
 					}),
 				});
@@ -134,16 +139,19 @@ const AboutGyna = () => {
 				await setDoc(docRef, {
 					bookings: [
 						{
-							uuid: uuidv4(),
-							date,
-							service,
-							gynaEmail: gynaData?.email,
-							gynaName: gynaData?.firstname + " " + gynaData?.lastname,
-							gynaCity: gynaData?.city,
-							gynaPic: gynaData?.image,
-							bookingFor: user?.email,
-							bookingStatus: "pending",
-							paid: false,
+						uuid: uuidv4(),
+						date,
+						service,
+						gynaEmail: gynaData?.email,
+						gynaName: gynaData?.firstname + " " + gynaData?.lastname,
+						gynaCity: gynaData?.city,
+						gynaPic: gynaData?.image,
+						bookingForName: userDetails?.name,
+						bookingForEmail: userDetails?.email,
+						bookingForPhone: userDetails?.phone,
+						bookingForPic: userDetails?.photoUrl,
+						bookingConfirmed: false,
+						paid: false,
 						},
 					],
 				});

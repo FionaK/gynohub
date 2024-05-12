@@ -1,12 +1,39 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Table from "./Table";
 import { UserAuth } from "../context/AuthContext";
 import Cards from "./Cards";
 import AddGyno from "./AddGyno";
 import Profile from "./Profile";
+import { doc, onSnapshot } from "firebase/firestore";
+import { db } from "../lib/firebase";
+import GynaTable from "./GynaTable";
 
 const Dashboard = () => {
 	const { user } = UserAuth();
+	const [userDetails, setUserDetails] = useState(null);
+
+	console.log(userDetails);
+
+	useEffect(() => {
+		if (!user || !user.email) return;
+		const docRef = doc(db, "users", user?.email);
+
+		// Subscribe to document changes
+		const unsubscribe = onSnapshot(docRef, (docSnapshot) => {
+			if (docSnapshot.exists()) {
+				// Update state with the new data
+				setUserDetails(docSnapshot.data());
+			} else {
+				// Handle document not found scenario (optional)
+				console.log("No such document!");
+			}
+		});
+
+		// Clean up function to unsubscribe from the snapshot listener
+		return () => {
+			unsubscribe();
+		};
+	}, [user?.email]);
 
 	return (
 		<section class="bg-white dark:bg-gray-800">
@@ -20,21 +47,40 @@ const Dashboard = () => {
 						</div>
 
 						<div role="tablist" className="tabs tabs-lifted dark:bg-gray-800">
-							<input
-								type="radio"
-								name="my_tabs_2"
-								role="tab"
-								className="tab mx-5 my-5"
-								aria-label="Appointments"
-								checked
-							/>
-							<div
-								role="tabpanel"
-								className="tab-content bg-base-100 border-base-300 rounded-box p-6"
-							>
-								{" "}
-								<Table />
-							</div>
+							{userDetails?.isGyna ? (
+								<>
+									<input
+										type="radio"
+										name="my_tabs_2"
+										role="tab"
+										className="tab mx-5 my-5"
+										aria-label="Manage Appointments"
+									/>
+									<div
+										role="tabpanel"
+										className="tab-content bg-base-100 border-base-300 rounded-box p-6"
+									>
+										<GynaTable />
+									</div>
+								</>
+							) : (
+								<>
+									<input
+										type="radio"
+										name="my_tabs_2"
+										role="tab"
+										className="tab mx-5 my-5"
+										aria-label="Appointments"
+										checked
+									/>
+									<div
+										role="tabpanel"
+										className="tab-content bg-base-100 border-base-300 rounded-box p-6"
+									>
+										<Table />
+									</div>
+								</>
+							)}
 
 							<input
 								type="radio"

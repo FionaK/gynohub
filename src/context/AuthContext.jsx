@@ -31,48 +31,50 @@ const Toast = Swal.mixin({
 export function AuthContextProvider({ children }) {
 	const [user, setUser] = useState({});
 
-	function googleSignIn() {
+	async function googleSignIn() {
 		const provider = new GoogleAuthProvider();
-		signInWithPopup(auth, provider)
-			.then((result) => {
-				// This gives you a Google Access Token. You can use it to access the Google API.
-				const credential = GoogleAuthProvider.credentialFromResult(result);
-				const token = credential.accessToken;
-				// The signed-in user info.
-				const user = result.user;
-				console.log(user);
-				setDoc(doc(db, "users", user.email), {
-					bookings: [],
-					email: user.email,
-					name: user.displayName,
-					phoneNumber: "",
-					age: "",
-					residence: "",
-          city:"",
-          county:"",
-					photoUrl: user.photoURL,
-					isGyna: false,
-				});
+		try {
+			const result = await signInWithPopup(auth, provider);
+			const credential = GoogleAuthProvider.credentialFromResult(result);
+			const token = credential.accessToken;
+			const user = result.user;
 
-				setDoc(doc(db, "userchats", user.email), {
-					chats: [],
-				});
+			const gynaDocRef = doc(db, "gynas", user?.email);
+			const gynaDocSnap = await getDoc(gynaDocRef);
 
-				// ...
-			})
-			.catch((error) => {
-				Toast.fire({
-					icon: "error",
-					title: "Failed",
-					text: "Please try another method",
-				});
+			setDoc(doc(db, "users", user.email), {
+				bookings: [],
+				email: user.email,
+				name: user.displayName,
+				phoneNumber: "",
+				age: "",
+				residence: "",
+				city: "",
+				county: "",
+				photoUrl: user.photoURL,
+				isGyna: gynaDocSnap.exists() ? true : false, // Check if document exists
 			});
+
+			setDoc(doc(db, "userchats", user.email), {
+				chats: [],
+			});
+		} catch (error) {
+			console.log(error);
+			Toast.fire({
+				icon: "error",
+				title: "Failed",
+				text: "Please try another method",
+			});
+		}
 	}
 
 	const signUp = async (email, password) => {
 		createUserWithEmailAndPassword(auth, email, password);
 		const docRef = doc(db, "users", email);
 		const docSnap = await getDoc(docRef);
+
+		const gynaDocRef = doc(db, "gynas", user?.email);
+		const gynaDocSnap = await getDoc(gynaDocRef).then((doc) => doc.exists());
 
 		if (docSnap.exists()) {
 			console.log("Document exist!");
@@ -86,10 +88,10 @@ export function AuthContextProvider({ children }) {
 				phoneNumber: "",
 				age: "",
 				residence: "",
-        city:"",
-        county:"",
+				city: "",
+				county: "",
 				photoUrl: "",
-				isGyna: false,
+				isGyna: gynaDocSnap ? true : false,
 			});
 
 			await setDoc(doc(db, "userchats", email), {

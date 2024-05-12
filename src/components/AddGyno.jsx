@@ -9,7 +9,7 @@ import {
 	collection,
 } from "firebase/firestore";
 import upload from "../lib/upload";
-import { toast } from "react-toastify";
+import { toast, Bounce } from "react-toastify";
 
 const AddGyno = () => {
 	const [loading, setLoading] = useState(false);
@@ -49,7 +49,17 @@ const AddGyno = () => {
 		const q = query(usersRef, where("email", "==", email));
 		const querySnapshot = await getDocs(q);
 		if (!querySnapshot.empty) {
-			return toast.warn("Email already exists");
+			return toast.warn("Email already exists", {
+				position: "top-center",
+				autoClose: 6000,
+				hideProgressBar: false,
+				closeOnClick: true,
+				pauseOnHover: true,
+				draggable: true,
+				progress: undefined,
+				theme: "colored",
+				transition: Bounce,
+			});
 		}
 
 		try {
