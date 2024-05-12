@@ -2,21 +2,24 @@ import React, { useEffect, useState } from "react";
 import { doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { UserAuth } from "../context/AuthContext";
 import { db } from "../lib/firebase";
+import { toast, Bounce } from "react-toastify";
 
 import { PaystackButton } from "react-paystack";
 
-const config = {
-	reference: new Date().getTime().toString(),
-	email: "user@example.com",
-	amount: 150000,
-	publicKey: "pk_test_06f0f6d5f5222c1fd5316744a827130dfd91b7da",
-	currency: "KES",
-};
+
 
 const Table = () => {
 	const { user } = UserAuth();
 
 	const [bookings, setBookings] = useState([]);
+
+	const config = {
+		reference: new Date().getTime().toString(),
+		email: user?.email,
+		amount: 150000,
+		publicKey: "pk_test_06f0f6d5f5222c1fd5316744a827130dfd91b7da",
+		currency: "KES",
+	};
 
 	useEffect(() => {
 		if (!user || !user.email) return;
@@ -54,9 +57,30 @@ const Table = () => {
 
 				try {
 					await updateDoc(docRef, { bookings: updatedBookings });
-					console.log("Attribute updated successfully");
+					toast.success("Payment Successfull", {
+						position: "top-center",
+						autoClose: 6000,
+						hideProgressBar: false,
+						closeOnClick: true,
+						pauseOnHover: true,
+						draggable: true,
+						progress: undefined,
+						theme: "colored",
+						transition: Bounce,
+					});
+					
 				} catch (error) {
-					console.error("Error updating document:", error);
+					toast.error("Payment Unsuccesfull", {
+						position: "top-center",
+						autoClose: 6000,
+						hideProgressBar: false,
+						closeOnClick: true,
+						pauseOnHover: true,
+						draggable: true,
+						progress: undefined,
+						theme: "colored",
+						transition: Bounce,
+					});
 				}
 			} else {
 				console.log("Booking not found");
@@ -67,6 +91,17 @@ const Table = () => {
 
 	const handlePaystackCloseAction = () => {
 		console.log("closed");
+		toast.success("Payment Successfull ghg", {
+			position: "top-center",
+			autoClose: 6000,
+			hideProgressBar: false,
+			closeOnClick: true,
+			pauseOnHover: true,
+			draggable: true,
+			progress: undefined,
+			theme: "colored",
+			transition: Bounce,
+		});
 	};
 
 	return (
@@ -84,7 +119,7 @@ const Table = () => {
 					</tr>
 				</thead>
 				<tbody>
-					{bookings.map((booking, index) => (
+					{bookings?.map((booking, index) => (
 						<tr key={index}>
 							<td>
 								<div className="flex items-center gap-3">
@@ -105,14 +140,20 @@ const Table = () => {
 
 							<td>{booking?.paid ? "Paid" : "Not paid"}</td>
 							<td>
-								<PaystackButton
-									{...config}
-									text="Paystack Button Implementation"
-									onSuccess={(reference) =>
-										handlePaystackSuccessAction(reference, booking.uuid)
-									}
-									onClose={handlePaystackCloseAction}
-								/>
+								{booking?.paid ? (
+									<button className="btn btn-primary btn-disabled btn-xs">Paid</button>
+								) : (
+									<button className="btn btn-primary btn-xs">
+										<PaystackButton
+											{...config}
+											text="Pay"
+											onSuccess={(reference) =>
+												handlePaystackSuccessAction(reference, booking.uuid)
+											}
+											onClose={handlePaystackCloseAction}
+										/>
+									</button>
+								)}
 							</td>
 						</tr>
 					))}
