@@ -3,7 +3,7 @@ import Navbar from "./Navbar";
 import Hero from "./Hero";
 import Benefits from "./Benefits";
 import Services from "./Services";
-import Testimonials from "./Testimonials";
+// import Testimonials from "./Testimonials";
 
 const Home = () => {
   return (
@@ -11,7 +11,7 @@ const Home = () => {
       <Hero />
       <Benefits />
       <Services />
-      <Testimonials />
+      {/* <Testimonials /> */}
     </>
   );
 };
