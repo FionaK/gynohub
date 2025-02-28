@@ -18,10 +18,10 @@ const Services = () => {
           with{" "}
         </h1>
 
-        <p class="mt-4 text-gray-500 xl:mt-6 dark:text-gray-300">
+        {/* <p class="mt-4 text-gray-500 xl:mt-6 dark:text-gray-300">
           Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nostrum quam
           voluptatibus
-        </p>
+        </p> */}
 
         <div class="grid grid-cols-1 gap-8 mt-8 xl:mt-12 xl:gap-16 md:grid-cols-2 xl:grid-cols-3">
           <div class="space-y-3">
