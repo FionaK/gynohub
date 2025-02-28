@@ -1,5 +1,6 @@
 import React from "react";
 import women from "../assets/women2.svg";
+import girl from "../assets/women.png";
 import { Link } from "react-router-dom";
 import { UserAuth } from "../context/AuthContext";
 
@@ -17,8 +18,8 @@ const Hero = () => {
 							</h1>
 
 							<p class="mt-3  text-gray-600 dark:text-gray-400">
-								Skip the waiting room and get easy access to an online
-								<br /> gynaecologist at a time that suits you.
+								Skip the waiting room and get easy access to an 
+								<br />online gynaecologist at a time that suits you.
 							</p>
 							<p class="mt-3 text-gray-600 dark:text-gray-400">
 								Enjoy easy and convenient gynaecological treatment.
@@ -46,8 +47,15 @@ const Hero = () => {
 
 					<div class="flex items-center justify-center w-full mt-6 lg:mt-0 lg:w-1/2">
 						<img
-							class="w-full h-full lg:max-w-3xl"
+							class="w-2x1 h-full lg:max-w-x1"
 							src={women}
+							alt="Catalogue-pana.svg"
+						/>
+					</div>
+					<div class="flex items-center justify-center w-full mt-6 lg:mt-0 lg:w-1/2">
+						<img
+							class="w-2x1 h-full lg:max-w-x1"
+							src={girl}
 							alt="Catalogue-pana.svg"
 						/>
 					</div>

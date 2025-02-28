@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { UserAuth } from "../context/AuthContext";
+// import register from "../assets/register.png";
 
 const Register = () => {
   const [email, setEmail] = useState("");
@@ -33,14 +34,15 @@ const Register = () => {
     }
   }, [user]);
   return (
-    <div class="flex w-full  mx-auto overflow-hidden bg-white  dark:bg-gray-800 ">
+       <div class="flex w-full  mx-auto overflow-hidden bg-white  dark:bg-gray-800 ">
       <div
         className="hidden bg-cover lg:block lg:w-1/2"
-        style={{
-          backgroundImage:
-            "url('https://images.unsplash.com/photo-1606660265514-358ebbadc80d?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1575&q=80')",
-        }}
-      ></div>
+        // style={{
+        //   backgroundImage:
+        //     "url('https://images.unsplash.com/photo-1606660265514-358ebbadc80d?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1575&q=80')",
+        // }}
+      >
+      </div>
 
       <div class="w-full px-6 py-8 md:px-8 lg:w-1/2">
         <div class="flex justify-center mx-auto">

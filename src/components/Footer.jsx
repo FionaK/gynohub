@@ -7,7 +7,7 @@ const Footer = () => {
         <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-y-10 lg:grid-cols-4">
           <div class="sm:col-span-2">
             <h1 class="max-w-lg text-xl font-semibold tracking-tight text-gray-800 xl:text-2xl dark:text-white">
-              Subscribe our newsletter to get update.
+              Subscribe to our newsletter.
             </h1>
 
             <div class="flex flex-col mx-auto mt-6 space-y-3 md:space-y-0 md:flex-row">

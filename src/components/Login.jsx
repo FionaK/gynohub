@@ -80,12 +80,12 @@ const Login = () => {
           </span>
         </button>
 
-        <div class="flex items-center justify-between mt-4">
+        <div class="flex items-center justify-between mt-12">
           <span class="w-1/5 border-b dark:border-gray-600 lg:w-1/4"></span>
 
           <a
             href="#"
-            class="text-xs text-center text-gray-500 uppercase dark:text-gray-400 hover:underline"
+            class="text-xs text-center text-gray-500 uppercase dark:text-gray-200 hover:underline"
           >
             or login with email
           </a>

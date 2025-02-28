@@ -47,8 +47,7 @@ const Services = () => {
             </h1>
 
             <p class="text-gray-500 dark:text-gray-300">
-              Irregular or missed periods are common menstrual issues. They can
-              result from factors like stress or hormonal changes. Consult a
+              Irregular or missed periods are common menstrual issues. Consult a
               healthcare provider for evaluation and guidance.
             </p>
           </div>
@@ -77,9 +76,7 @@ const Services = () => {
 
             <p class="text-gray-500 dark:text-gray-300">
               If you're noticing symptoms like painful urination, abnormal
-              discharge, or bumps, consider a virtual consultation with us. Even
-              if you don't have symptoms after exposure, a provider can
-              prescribe antibiotics through a virtual visit, depending on recent
+              discharge, or bumps, consider a virtual consultation with us. 
               intimacy
             </p>
           </div>
@@ -113,9 +110,8 @@ const Services = () => {
             </h1>
 
             <p class="text-gray-500 dark:text-gray-300">
-              Vaginal yeast infections, caused by Candida overgrowth, are common
-              and uncomfortable. Symptoms include itching, swelling, irritation,
-              and thick discharge. Seek online gynecology consultation for
+              Vaginal yeast infection are common
+              and uncomfortable. Seek online gynecology consultation for
               treatment options.
             </p>
           </div>
